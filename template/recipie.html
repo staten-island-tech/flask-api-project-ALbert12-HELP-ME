@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>{{ recipe.name }} Details</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <h1>{{ recipe.name }} Details</h1>
+      <div class="recipe-detail">
+        <img src="{{ recipe.image }}" alt="{{ recipe.name }}" />
+        <p><strong>ID:</strong> {{ recipe.id }}</p>
+        <p><strong>Types:</strong> {{ recipe.types | join(', ') }}</p>
+        <p><strong>Height:</strong> {{ recipe.height }}</p>
+        <p><strong>Weight:</strong> {{ recipe.weight }}</p>
+      </div>
+      <!-- Chart container -->
+      <div class="recipe-stats">
+        <canvas id="statsChart"></canvas>
+      </div>
+      <p><a href="{{ url_for('index') }}">Back to all Recipes</a></p>
+    </div>
+
+    <!-- Include Chart.js from a CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      // Convert Python lists to JavaScript arrays using Jinja's tojson filter
+      const statNames = {{ recipe.stat_names | tojson }};
+      const statValues = {{ recipe.stat_values | tojson }};
+
+      // Create a bar chart to display the Recipe's base stats
+      const ctx = document.getElementById('statsChart').getContext('2d');
+      const statsChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: statNames,
+          datasets: [{
+            label: 'Base Stats',
+            data: statValues,
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
