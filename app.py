@@ -1,9 +1,11 @@
+from flask import Flask, render_template, request
+
 app = Flask(__name__)
 
 @app.route("/")
 def index():
     # Get the first 150 recipes (originally Pokémon) from the API
-    response = requests.get("https://pokeapi.co/api/v2/pokemon?limit=150")
+    response = request.get("https://pokeapi.co/api/v2/pokemon?limit=150")
     data = response.json()
     recipe_list = data['results']
     
@@ -32,7 +34,7 @@ def index():
 @app.route("/recipe/<int:id>")
 def recipe_detail(id):
     # Get detailed info for the recipe using its id
-    response = requests.get(f"https://pokeapi.co/api/v2/pokemon/{id}")
+    response = request.get(f"https://pokeapi.co/api/v2/pokemon/{id}")
     data = response.json()
     
     # Extract extra details like types, height, and weight
