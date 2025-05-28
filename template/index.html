@@ -1,34 +1,59 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>First 150 Recipes</title>
-    <!-- Link to your CSS stylesheet -->
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='style.css') }}"
-    />
-  </head>
-  <body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recipe Search</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
     <div class="container">
-      <h1>First 150 Recipes</h1>
-      <div class="card-container">
-        <!-- Loop through each Recipe and wrap each card in a link -->
-        {% for recipe in recipes %}
-        <a
-          href="{{ url_for('recipe_detail', id=recipe.id) }}"
-          class="card-link"
-        >
-          <div class="card">
-            <img src="{{ recipe.image }}" alt="{{ recipe.name }}" />
-            <div class="card-body">
-              <h5 class="card-title">{{ recipe.name }}</h5>
-              <p class="card-text">ID: {{ recipe.id }}</p>
-            </div>
-          </div>
-        </a>
-        {% endfor %}
-      </div>
+        <h1>Search for Recipes</h1>
+        <form id="searchForm">
+            <input type="text" name="q" placeholder="e.g., pasta, chicken" required>
+            <select name="diet">
+                <option value="">Select Diet</option>
+                <option value="low-carb">Low-Carb</option>
+                <option value="high-protein">High-Protein</option>
+            </select>
+            <select name="cuisineType">
+                <option value="">Select Cuisine</option>
+                <option value="italian">Italian</option>
+                <option value="chinese">Chinese</option>
+            </select>
+            <button type="submit">Search</button>
+        </form>
+
+        <div id="results"></div>
     </div>
-  </body>
+
+    <script>
+        const form = document.getElementById('searchForm');
+        const resultsDiv = document.getElementById('results');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const query = new URLSearchParams(formData).toString();
+
+            const res = await fetch(`/search?${query}`);
+            const data = await res.json();
+
+            resultsDiv.innerHTML = '';
+            if (data.hits) {
+                data.hits.forEach(hit => {
+                    const recipe = hit.recipe;
+                    resultsDiv.innerHTML += `
+                        <div class="recipe">
+                            <h3>${recipe.label}</h3>
+                            <img src="${recipe.image}" alt="${recipe.label}">
+                            <p><a href="${recipe.url}" target="_blank">View Recipe</a></p>
+                        </div>
+                    `;
+                });
+            } else {
+                resultsDiv.innerHTML = `<p>No results found.</p>`;
+            }
+        });
+    </script>
+</body>
 </html>
