@@ -1,26 +1,24 @@
-from flask import Flask, request, jsonify, render_template
-from edamam_client import search_recipes
+from flask import Flask, render_template
+import requests
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    joke_url = "https://v2.jokeapi.dev/joke/Any"
+    response = requests.get(joke_url)
+    data = response.json()
 
-@app.route('/search', methods=['GET'])
-def search():
-    query = request.args.get('q')
-    if not query:
-        return jsonify({'error': 'Missing query parameter `q`'}), 400
+    if data["type"] == "single":
+        joke = data["joke"]
+        setup = None
+        delivery = None
+    else:
+        joke = None
+        setup = data["setup"]
+        delivery = data["delivery"]
 
-    diet = request.args.get('diet')
-    cuisine = request.args.get('cuisineType')
-
-    try:
-        results = search_recipes(query, diet, cuisine)
-        return jsonify(results)
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+    return render_template("index.html", joke=joke, setup=setup, delivery=delivery)
 
 if __name__ == '__main__':
     app.run(debug=True)
