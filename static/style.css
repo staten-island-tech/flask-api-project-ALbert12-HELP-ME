@@ -1,6 +1,6 @@
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f0f8ff;
+    background-color: #2ee711;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -10,7 +10,7 @@ body {
 .container {
     text-align: center;
     padding: 30px;
-    background: white;
+    background: rgb(9, 255, 0);
     border-radius: 12px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
@@ -21,14 +21,14 @@ body {
 
 .joke-text {
     font-size: 1.4em;
-    color: #333;
+    color: #0fb800;
     margin-bottom: 10px;
 }
 
 .button {
     text-decoration: none;
     background-color: #007BFF;
-    color: white;
+    color: rgb(255, 1, 1);
     padding: 10px 20px;
     border-radius: 8px;
     font-weight: bold;
@@ -36,5 +36,5 @@ body {
 }
 
 .button:hover {
-    background-color: #0056b3;
+    background-color: #007bff;
 }
